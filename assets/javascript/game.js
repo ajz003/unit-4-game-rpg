@@ -2,34 +2,49 @@ $(document).ready(function () {
 
     // ----------- app state
 
+    var timesAttacked = 0
+
     var easy = {
-        healthPoints: 180,
-        attackPower: 8,
-        counterAttackPower: 50
+        name: "easy",
+        healthPoints: 200,
+        attackPower: 30,
+        counterAttackPower: 30,
+        attackPowerGrowth: 10
     };
 
     var normal = {
-        healthPoints: 120,
-        attackPower: 2,
-        counterAttackPower: 40
+        name: "normal",
+        healthPoints: 150,
+        attackPower: 15,
+        counterAttackPower: 20,
+        attackPowerGrowth: 10,
     };
 
     var heroic = {
-        healthPoints: 100,
+        name: "heroic",
+        healthPoints: 120,
         attackPower: 8,
-        counterAttackPower: 30
+        counterAttackPower: 10,
+        attackPowerGrowth: 8
     };
     var legendary = {
-
-        healthPoints: 80,
-        attackPower: 2,
-        counterAttackPower: 20
+        name: "legendary",
+        healthPoints: 100,
+        attackPower: 1,
+        counterAttackPower: 5,
+        attackPowerGrowth: undefined
     };
 
     var characterArr = [easy, normal, heroic, legendary];
+    var characterNameArr = [easy.name, normal.name, heroic.name, legendary.name];
 
-    var characterSelected = Boolean(false);
-    var enemySelected = Boolean(false);
+    var isCharacterSelected = Boolean(false);
+    var isEnemySelected = Boolean(false);
+    var yourCharacter = undefined;
+    var opponentCharacter = undefined;
+    var wins = 0
+
+
 
 
 
@@ -40,13 +55,14 @@ $(document).ready(function () {
     $("#legendary-hp").text(legendary.healthPoints)
 
 
+
     // ----------- the game
 
 
     $(".character").click(function (e) {
 
 
-        if (characterSelected === false) {
+        if (isCharacterSelected === false) {
 
             $(".character").addClass("enemy-available");
             $(this).removeClass("enemy-available").addClass("your-character");
@@ -54,15 +70,47 @@ $(document).ready(function () {
 
             $($(".enemy-available").parent()).appendTo("#enemies-available");
 
-            characterSelected = true;
+
+
+            for (var i = 0; i < characterNameArr.length; i++) {
+                var you = $(this).attr("id")
+                console.log("you: "+you);
+                console.log("characterNameArr: "+characterNameArr[i]);
+
+                if (characterNameArr[i] === you) {
+                    yourCharacter = characterArr[i];            
+
+                }
+
+            }
+
+            console.log("you final: "+ yourCharacter.name)
+            isCharacterSelected = true;
 
         }
 
-        if (enemySelected === false && $(this).hasClass("enemy-available")) {
+        if (isEnemySelected === false && $(this).hasClass("enemy-available")) {
 
             $(this).addClass("enemy-current");
             $("#defender").append($(this).parent());
-            enemySelected = true;
+
+            for (var i = 0; i < characterNameArr.length; i++) {
+                var you = $(this).attr("id")
+                console.log("you: "+you);
+                console.log("characterNameArr: "+characterNameArr[i]);
+
+                if (characterNameArr[i] === you) {
+                    opponentCharacter = characterArr[i];            
+
+                }
+
+            }
+
+            console.log("opponent final: "+ opponentCharacter.name)
+
+            isEnemySelected = true;
+
+
 
         }
 
@@ -73,10 +121,39 @@ $(document).ready(function () {
 
     $(".btn").click(function (e) {
 
-        if (characterSelected === true && enemySelected === true) {
+        if (isCharacterSelected === true && isEnemySelected === true) {
 
-        alert()
+            timesAttacked++
+            var you = yourCharacter
+            var opponent = opponentCharacter
 
+            legendary.attackPowerGrowth = you.attackPower
+
+                opponent.healthPoints -= you.attackPower;
+                you.healthPoints -= opponent.counterAttackPower;
+                you.attackPower += you.attackPowerGrowth;
+
+                console.log("opp hp: "+opponent.healthPoints);
+                console.log("opp cap: "+opponent.counterAttackPower);
+                console.log("you hp: "+you.healthPoints);
+                console.log("you ap: "+you.attackPower);
+
+
+            if (opponent.healthPoints <= 0) {
+            wins++;
+            $("#defender").empty()
+            isEnemySelected = false;
+
+            }
+
+
+            if (you.healthPoints <= 0) {
+                alert("You lose.")
+            }
+
+            if (wins === 3) {
+                alert("You win!")
+            }
         }
 
     });
@@ -86,6 +163,10 @@ $(document).ready(function () {
 
 
     // ----------- functions
+
+
+
+
 
 
 
