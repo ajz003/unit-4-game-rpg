@@ -66,6 +66,10 @@ $(document).ready(function () {
 
     $(".character").click(function (e) {
 
+        
+        console.log("character selected: "+isCharacterSelected)
+        console.log("enemy selected: "+isEnemySelected)
+
 
         if (isCharacterSelected === false) {
 
@@ -128,13 +132,13 @@ $(document).ready(function () {
 
     $(".btn").click(function (e) {
 
-        if (isCharacterSelected === true && isEnemySelected === true) {
+        var you = yourCharacter
+        var opponent = opponentCharacter
 
-
+        if (isCharacterSelected === true && isEnemySelected === true && gameOver === false && opponent.healthPoints > 0 && you.healthPoints > 0) {
 
             timesAttacked++
-            var you = yourCharacter
-            var opponent = opponentCharacter
+
 
             legendary.attackPowerGrowth = you.attackPower
 
@@ -143,26 +147,19 @@ $(document).ready(function () {
             $("#game-notes").text("You attacked " + opponent.pronoun + " for " + you.attackPower + " damage. " + opponent.pronoun + " attacked you back for " + opponent.counterAttackPower + " damage.")
             you.attackPower += you.attackPowerGrowth;
 
-
-
-            console.log("opp hp: " + opponent.healthPoints);
-            console.log("opp cap: " + opponent.counterAttackPower);
-            console.log("you hp: " + you.healthPoints);
-            console.log("you ap: " + you.attackPower);
-
             $("#easy-hp").text(easy.healthPoints)
             $("#normal-hp").text(normal.healthPoints)
             $("#heroic-hp").text(heroic.healthPoints)
             $("#legendary-hp").text(legendary.healthPoints)
 
-
-
             if (opponent.healthPoints <= 0 && you.healthPoints > 0 && gameOver === false) {
                 wins++;
                 $("#defender").empty()
+                if (wins < 3) {
+                  
                 $("#game-notes").text("You have defeated " + opponent.pronoun + " . You can choose to fight another enemy.")
                 isEnemySelected = false;
-
+                }
             }
 
         }
@@ -172,14 +169,17 @@ $(document).ready(function () {
         }
 
         if (you.healthPoints <= 0) {
-            alert("You lose.")
+            $("#game-notes").text("You lose.")
             gameOver === true;
+
         }
 
         if (wins === 3) {
-            alert("You win!")
+            $("#game-notes").text("You win!")
             gameOver === true;
+
         }
+
 
     });
 
