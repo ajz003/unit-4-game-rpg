@@ -25,14 +25,14 @@ h1, h2, div {
 }
 
 h1 {
-    font-size: 96px;
+    font-size: 72px;
     font-weight: bolder;
     text-shadow: 2px 0 0 yellow, -2px 0 0 yellow, 0 2px 0 yellow, 0 -2px 0 yellow, 1px 1px yellow, -1px -1px 0 yellow, 1px -1px 0 yellow, -1px 1px 0 yellow;
     background-color: black;
     border: 5px solid yellow;
     color: black;
     text-align: center;
-    width: 90%;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -40,7 +40,7 @@ h1 {
 
 h2, 
 #defender {
-    font-size: 36px;
+    font-size: 24px;
 }
 
 .name {
@@ -82,8 +82,6 @@ h2,
     margin-bottom: 25px;
     margin-top: 20px;
     background-color: black;
-    display: none;
-
     text-align: center;
     width: 50%;
     margin-left: 0;
