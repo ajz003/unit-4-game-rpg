@@ -1,5 +1,8 @@
 $(document).ready(function () {
 
+
+
+
     // ----------- app state
 
     var timesAttacked = 0
@@ -59,6 +62,9 @@ $(document).ready(function () {
     $("#heroic-hp").text(heroic.healthPoints)
     $("#legendary-hp").text(legendary.healthPoints)
 
+    $("#game-notes").css("visibility", "hidden")
+    $("#restart").css("visibility", "hidden")
+
 
 
     // ----------- the character clicking
@@ -66,18 +72,22 @@ $(document).ready(function () {
 
     $(".character").click(function (e) {
 
-        
-        console.log("character selected: "+isCharacterSelected)
-        console.log("enemy selected: "+isEnemySelected)
+
+        console.log("This.parent: "+this.parent)
+
 
 
         if (isCharacterSelected === false) {
 
             $(".character").addClass("enemy-available");
             $(this).removeClass("enemy-available").addClass("your-character");
+
             $("#your-character").append($(this).parent())
 
             $($(".enemy-available").parent()).appendTo("#enemies-available");
+            
+            $("#your-character").find("*").css("border-color", "#7578ff")
+            $("#enemies-available").find("*").css("border-color", "#88ff4f")
 
 
 
@@ -102,6 +112,7 @@ $(document).ready(function () {
 
             $(this).addClass("enemy-current");
             $("#defender").append($(this).parent());
+            $("#defender").find("*").css("border-color", "red")
 
             for (var i = 0; i < characterNameArr.length; i++) {
                 var you = $(this).attr("id")
@@ -115,10 +126,14 @@ $(document).ready(function () {
 
             }
 
+            $("#game-notes").css("visibility", "visible")
+
             console.log("opponent final: " + opponentCharacter.name)
             $("#game-notes").text("You have challenged " + opponentCharacter.pronoun + " . May the Force be with you.")
 
             isEnemySelected = true;
+
+            
 
 
 
@@ -132,10 +147,16 @@ $(document).ready(function () {
 
     $(".btn").click(function (e) {
 
+        console.log(isCharacterSelected)
+        console.log(isEnemySelected)
+        console.log(gameOver)
+
         var you = yourCharacter
         var opponent = opponentCharacter
 
         if (isCharacterSelected === true && isEnemySelected === true && gameOver === false && opponent.healthPoints > 0 && you.healthPoints > 0) {
+
+            $("#game-notes").show()
 
             timesAttacked++
 
@@ -147,6 +168,8 @@ $(document).ready(function () {
             $("#game-notes").text("You attacked " + opponent.pronoun + " for " + you.attackPower + " damage. " + opponent.pronoun + " attacked you back for " + opponent.counterAttackPower + " damage.")
             you.attackPower += you.attackPowerGrowth;
 
+        
+
             $("#easy-hp").text(easy.healthPoints)
             $("#normal-hp").text(normal.healthPoints)
             $("#heroic-hp").text(heroic.healthPoints)
@@ -156,9 +179,9 @@ $(document).ready(function () {
                 wins++;
                 $("#defender").empty()
                 if (wins < 3) {
-                  
-                $("#game-notes").text("You have defeated " + opponent.pronoun + " . You can choose to fight another enemy.")
-                isEnemySelected = false;
+
+                    $("#game-notes").text("You have defeated " + opponent.pronoun + " . You can choose to fight another enemy.")
+                    isEnemySelected = false;
                 }
             }
 
@@ -171,12 +194,14 @@ $(document).ready(function () {
         if (you.healthPoints <= 0) {
             $("#game-notes").text("You lose.")
             gameOver === true;
+            $("#restart").css("visibility", "visible")
 
         }
 
         if (wins === 3) {
             $("#game-notes").text("You win!")
             gameOver === true;
+            $("#restart").css("visibility", "visible")
 
         }
 
@@ -184,12 +209,13 @@ $(document).ready(function () {
     });
 
 
+    $("#restart").click(function (e) {
 
+        window.location.reload();
 
+    });
 
     // ----------- functions
-
-
 
 
 
